@@ -5,6 +5,38 @@ CREATE TABLE menu(
     quantity INT NOT NULL,
     type VARCHAR(50) NOT NULL,
     date DATE NOT NULL DEFAULT CURRENT_DATE
-)
+);
 
 ALTER TABLE menu ADD CHECK(type='Veg' OR type='NonVeg' OR type='Beverage' OR type='Normal');
+ALTER TABLE menu ADD COLUMN image VARCHAR(500);
+
+CREATE TABLE menu (
+    id UUID NOT NULL PRIMARY KEY,
+    title VARCHAR(50) NOT NULL,
+    description VARCHAR(100),
+    quantity INT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    date DATE NOT NULL DEFAULT CAST(SYSDATETIMEOFFSET() AT TIME ZONE 'UTC' AS DATE)
+);
+
+ALTER TABLE menu ALTER COLUMN date DROP DEFAULT;
+ALTER TABLE menu ALTER COLUMN date SET DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')::DATE;
+UPDATE menu SET date = (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')::DATE WHERE date IS NULL;
+
+CREATE TABLE users(
+    id UUID NOT NULL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    designation VARCHAR(50) NOT NULL,
+    role VARCHAR(50) CHECK(role='admin' OR role='employee') NOT NULL,
+    password VARCHAR(500) NOT NULL,
+    verify BOOLEAN
+);
+
+CREATE TABLE verify(
+    id UUID NOT NULL PRIMARY KEY,
+    user_id VARCHAR(500),
+    otp VARCHAR(50)
+);
+
+alter table users add column verify BOOLEAN DEFAULT false;
