@@ -1,15 +1,12 @@
 const pool = require("../lib/db");
 exports.checkOTP = async (req, res) => {
   const payload = await req.body;
-  console.log(payload)
   const params = req.params["id"];
-  console.log(params);
 
   try {
     const exitingUser = await pool.query("SELECT * from users where id=$1", [
       params,
     ]);
-    console.log("exiting",exitingUser)
     if (exitingUser.rows.length<0)
       return res.status(401).json({
         result: "Not Authorized",
@@ -20,7 +17,6 @@ exports.checkOTP = async (req, res) => {
       "SELECT * from verify where user_id=$1 AND otp=$2",
       [params, payload.code.trim()]
     );
-    console.log("exitingOtp",exitingOtp)
     if (!exitingOtp)
       return res.status(401).json({
         result: "Invalid OTP",
@@ -30,7 +26,6 @@ exports.checkOTP = async (req, res) => {
       true,
       exitingOtp.rows[0].user_id,
     ]);
-    console.log(updatedUsers);
     await pool.query("DELETE FROM verify WHERE id=$1 AND user_id=$2", [
       exitingOtp.rows[0].id,
       exitingOtp.rows[0].user_id,

@@ -46,7 +46,6 @@ exports.createNewAccount = async (req, res) => {
       "INSERT INTO verify(id, user_id, otp)  VALUES(uuid_generate_v4(), $1, $2) RETURNING *",
       [newUser.rows[0].id, otp]
     );
-    console.log("newUser: ",newUser.rows[0].email);
     await sendEmail({
       email: newUser.rows[0].email,
       subject: "Verify Email",

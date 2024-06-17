@@ -5,6 +5,7 @@ const MenuRoutes = require("./routes/MenuRoute");
 const UploadRoutes = require("./routes/UploadRoute");
 const AuthRoutes = require("./routes/AuthRoute")
 const CheckRoutes = require("./routes/CheckRoute")
+const VerifyTokenRoutes =require("./routes/VerifyTokenRoute");
 require("dotenv").config();
 const app = express();
 app.use(cookieParser());
@@ -27,6 +28,7 @@ app.use("/api/v1/menu", MenuRoutes.routes);
 app.use("/api/v1/upload", UploadRoutes.routes);
 app.use("/api/v1/auth",AuthRoutes.routes);
 app.use("/api/v1/check",CheckRoutes.routes);
+app.use("/api/v1/verifytoken",VerifyTokenRoutes.routes)
 
 app.listen(process.env.PORT, () => {
   console.log("server connected");

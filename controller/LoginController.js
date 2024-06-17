@@ -16,7 +16,6 @@ const validate = (data) => {
 
 exports.loginAccount = async (req, res) => {
   const payload = req.body;
-  console.log(payload);
 
   try {
     const { error } = validate(payload);
@@ -35,7 +34,6 @@ exports.loginAccount = async (req, res) => {
     ]);
 
     if (!Users.rows.length) {
-      console.log("users", Users);
       return res.status(401).json({ result: "invalid email ", success: false });
     }
 
@@ -83,21 +81,13 @@ exports.loginAccount = async (req, res) => {
       const user = Users.rows[0];
       const tokenPayload = { id: user.id, role: user.role };
       const jwtSecret =process.env.JWT_SECRET;
-      const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "2h" });
-
+      const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "1d" });
+      const maxAge = 24 * 60 * 60 * 1000;
       res.cookie("access_token", token, {
         httpOnly: process.env.NODE_ENV === 'production' ? true : false,
         secure: process.env.NODE_ENV === 'production' ? true : false, 
         // sameSite: "none",
-        maxAge: 600 * 120 
-      });
-      
-      console.log("aa",process.env.NODE_ENV);
-      console.log("Cookie set: ", {
-        token,
-        maxAge: 600 * 120,
-        secure: false,
-        // sameSite: "none"
+        maxAge: maxAge 
       });
 
       return res.status(200).json({
