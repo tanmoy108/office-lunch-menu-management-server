@@ -8,7 +8,8 @@ const currentDate = `${year}-${month}-${day}`;
 
 exports.fetchItems = async (req, res) => {
   try {
-    const results = await pool.query("SELECT * FROM menu WHERE date = $1", [currentDate]);
+    // const results = await pool.query("SELECT * FROM menu WHERE date = $1", [currentDate]);
+    const results = await pool.query("SELECT * FROM menu");
     res.status(200).json(results.rows);
   } catch (error) {
     console.error(error);
